@@ -158,10 +158,6 @@
 " Vim UI {
 
     if filereadable(expand("~/.vim/bundle/vim-colors-solarized/colors/solarized.vim"))
-        let g:solarized_termcolors=256
-        let g:solarized_termtrans=1
-        let g:solarized_contrast="normal"
-        let g:solarized_visibility="normal"
         color solarized             " Load a colorscheme
     endif
 
@@ -661,11 +657,6 @@
 
             " enable completion from tags
             let g:ycm_collect_identifiers_from_tags_files = 1
-
-            " remap Ultisnips for compatibility for YCM
-            let g:UltiSnipsExpandTrigger = '<C-j>'
-            let g:UltiSnipsJumpForwardTrigger = '<C-j>'
-            let g:UltiSnipsJumpBackwardTrigger = '<C-k>'
 
             " Enable omni completion.
             autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS

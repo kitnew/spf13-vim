@@ -1,0 +1,74 @@
+set guifont=Menlo\ Regular:h17,Monaco:h16,Andale\ Mono:h17
+
+" Wrap only for text file
+au BufEnter *.txt,*.tex set wrap linebreak nolist textwidth=0 wrapmargin=0
+
+let NERDTreeShowHidden=0
+let NERDTreeQuitOnOpen=0
+let NERDTreeWinSize=23
+let g:nerdtree_tabs_open_on_gui_startup=1
+let g:nerdtree_tabs_open_on_new_tab = 1
+
+" keyboard shortcuts
+" jj work with nopaste mode only, use <C-[> instead.
+inoremap jj <ESC>
+" tab navigation
+nnoremap th  :tabfirst<CR>
+nnoremap tj  :tabnext<CR>
+nnoremap tk  :tabprev<CR>
+nnoremap tl  :tablast<CR>
+nnoremap tt  :tabedit<Space>
+nnoremap tn  :tabnext<Space>
+nnoremap tm  :tabm<Space>
+nnoremap td  :tabclose<CR>
+" Strip whitespace
+inoremap <leader><leader>s <ESC>:call StripTrailingWhitespace()<CR>i
+nnoremap <leader><leader>s :call StripTrailingWhitespace()<CR>
+
+" Hex edit mode
+noremap <F8> :call SwitchHexMode()<CR>
+
+let $is_hex=0
+
+function! SwitchHexMode()
+    set binary
+    set noeol
+    if $is_hex>0
+        :%!xxd -r
+       let $is_hex=0
+    else
+        :%!xxd
+        let $is_hex=1
+    endif
+endfunction
+
+
+let g:ycm_global_ycm_extra_conf = "~/.vimrc_ycm_extra_conf.py"
+
+" Make YCM compatible with UltiSnips
+function! g:UltiSnips_Complete()
+    call UltiSnips#ExpandSnippet()
+    if g:ulti_expand_res == 0
+        if pumvisible()
+            return "\<C-n>"
+        else
+            call UltiSnips#JumpForwards()
+            if g:ulti_jump_forwards_res == 0
+               return "\<TAB>"
+            endif
+        endif
+    endif
+    return ""
+endfunction
+
+" better key bindings for UltiSnipsExpandTrigger
+let g:UltiSnipsJumpForwardTrigger = "<tab>"
+let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
+let g:UltiSnipsListSnippets="<c-e>"
+let g:UltiSnipsExpandTrigger = "<C-j>"
+au BufEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
+
+" this mapping Enter key to <C-y> to chose the current highlight item
+" and close the selection list, same as other IDEs.
+" CONFLICT with some plugins like tpope/Endwise
+inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
